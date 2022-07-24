@@ -20,27 +20,32 @@ namespace ft
 			{
 			}
 
-			bool		empty(void) const
+			bool			empty(void) const
 			{
 				return c.empty();
 			}
 
-			size_type	size(void) const
+			size_type		size(void) const
 			{
 				return c.size();
 			}
 
-			value_type	top(void) const
+			value_type&		top(void)
 			{
 				return c.back();
 			}
 
-			void		push(const value_type& value)
+			const value_type&	top(void) const
+			{
+				return c.back();
+			}
+
+			void			push(const value_type& value)
 			{
 				c.push_back(value);
 			}
 
-			void		pop(void)
+			void			pop(void)
 			{
 				c.pop_back();
 			}
@@ -66,34 +71,41 @@ namespace ft
 	};
 
 	template <class T, class Container>
-	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	{
 		return (lhs.c == rhs.c);
 	};
 
 	template <class T, class Container>
-	bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+	bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	{
 		return (lhs.c != rhs.c);
 	};
 
 	template <class T, class Container>
-	bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+	bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	{
 		return (lhs.c < rhs.c);
 	};
 
 	template <class T, class Container>
-	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	{
 		return (lhs.c <= rhs.c);
 	};
 
 	template <class T, class Container>
-	bool operator> (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+	bool operator> (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	{
 		return (lhs.c > rhs.c);
 	};
 
 	template <class T, class Container>
-	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	{
 		return (lhs.c >= rhs.c);
 	};
+
 }
 
 #endif
