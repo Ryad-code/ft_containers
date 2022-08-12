@@ -8,7 +8,7 @@
 
 #include "../Utils/Iterator.hpp"
 #include "../Utils/Pair.hpp"
-#include "../Utlis/Node.hpp"
+#include "Node.hpp"
 
 namespace ft
 {
@@ -44,8 +44,10 @@ namespace ft
 			key_compare		_compare;
 			allocator_type		_alloc;
 			node_allocator_type	_node_alloc;
-			map_node		*_root;
 			size_type		_size;
+			map_node		*_root;
+			map_node		*_begin;
+			map_node		*_end;
 		//....................................................PUBLIC SUB-CLASSES & METHODS
 		public:
 			class value_compare
@@ -93,10 +95,16 @@ namespace ft
 				_rend->parent = _end;
 				_root = NULL;
 				*this = x;
-		}
+			}
 
-
-
+/*			template <class InputIterator>
+			map (typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
+				_alloc_type(alloc),
+				_key_compare(comp),
+				_size(0), _root(NULL)
+			{
+				insert(first, last);
+				}*/
 
 
 	};
