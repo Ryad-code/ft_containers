@@ -43,8 +43,10 @@ class map
 			_key_compare(comp),
 			_size(0),
 			_root(NULL) {}
-		//.......Range & Copy constructor still missing
-		//.......Operator= & destructor also missing
+		//Range constructor
+		//Copy constructor
+		//Operator= 
+		//Destructor
 		
 //......................................................................TREE_FUNCTIONS
 		node_type*	new_node(const value_type& val, node_type *parent)
@@ -108,6 +110,113 @@ class map
 					_root = NULL;
 			}
 		}
+
+		bool		key_exist(const key_type& key, node_type* start)
+		{
+			bool res = false;
+			if (start == NULL)
+				return false;
+			if (key == start->value.first)
+				return true;
+			if (start->left)
+				 res = key_exist(key, start->left);
+			if (start->right && !res)
+				res = key_exist(key, start->right);
+			return res;
+		}
+
+		node_type*	search_key(const key_type& key, node_type* current)
+		{
+			if (current == NULL)
+				return current;
+			if (_key_compare(key, current->value.first))
+				return find_key(key, current->left);
+			else if (_key_compare(current->value.first, key))
+				return find_key(key, current->right);
+			return current;
+		}
+
+		node_type*	find_key(const key_type& key, node_type* current)
+		{
+			if (key_exist(key, current) == false)
+				return NULL;
+			return search_key(key, current);
+		}
+		
+		int		get_depth(node_type* current, int res)
+		{
+			if (current->right)
+				return res = get_depth(current->right, res + 1);
+			if (current->left)
+				return res = get_depth(current->left, res + 1);
+			return res;
+		}
+//.........................................................................DELETING_NODES		
+		node_type*	delete_node(const key_type key, node_type* current)
+		{	
+			//Si la cle n'existe pas
+			if (!current || key_exist(key, _root) == false)
+				return NULL;
+			//Initialisation de current = element a supprimer
+			current = find_key(key, current);
+			//Si l'element a supprimer est la racine--->Utile ? 
+			if (key == _root->value.first)
+			{
+				//Deleting _root
+				//return new_root
+			}
+			//Si l'element a supprimer est une feuille
+			else if (!current->left && !current->right)
+			{
+				current->parent = NULL;
+				_alloc.destroy(current);
+				_alloc.deallocate(current, 1);
+				current = NULL;
+				_size--;
+			}
+			//Si l'element a supprimer n'est ni la racine ni une feuille
+			else
+			{	
+				//Si l'element a supprimer a un seul enfant
+				if (!current->right || !current->left)
+				{
+					//Si l'enfant est a droite
+					if (current->right)
+					{
+						if (_key_compare(current->parent->value.first), key)
+							current->parent->right = current->right;
+						else if (key, _key_compare(current->parent->value.first))
+							current->parent->left = current->right;
+						current->right->parent = current->parent;
+					}
+					//Si l'enfant est a gauche
+					else if (current->left)
+					{
+						if (_key_compare(current->parent->value.first), key)
+							current->parent->right = current->left;
+						else if (key, _key_compare(current->parent->value.first))
+							current->parent->right = current->left;
+						current->left->parent = current->parent;
+					}
+					_alloc.destroy(current);
+					_alloc.deallocate(current, 1);
+					current = NULL;
+					_size--;
+				}
+				//Si l'element a supprimer a deux enfant
+				else if (current->right && current->left)
+				{
+					node_type* temp;
+					if (_key_compare(current->parent->value.first), key)
+					{
+
+					}
+				}
+			}
+			return NULL;
+		}
+
+
 //................................TREE_DISPLAY................................//
 		void		display_tree(node_type* start)
 		{

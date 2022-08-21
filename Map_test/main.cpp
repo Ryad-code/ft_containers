@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include "../Utils/Pair.hpp"
-#
 #include "Map.hpp"
 
 int main()
@@ -20,27 +19,28 @@ int main()
 	//Declaration de ft::map
 	ft::map<int, std::string> map1;
 	//Insertion d'elements de la map
-	map1.insert_root_node(p8, NULL);
+	map1.insert_root_node(p2, NULL);
 	map1.insert_root_node(p6, NULL);
 	map1.insert_root_node(p1, NULL);
 	map1.insert_root_node(p4, NULL);
-	map1.insert_root_node(p2, NULL);
+	map1.insert_root_node(p8, NULL);
 	map1.insert_root_node(p5, NULL);
 	map1.insert_root_node(p7, NULL);
 	map1.insert_root_node(p3, NULL);
 
 	//Display
-	map1.display_tree(map1._root);
+//	map1.display_tree(map1._root);
+
+	std::cout << map1.get_depth(map1._root, 0) << std::endl;
+	std::cout << "\n";
+	std::cout << map1.get_depth(map1._root->right, 0) << std::endl;
+	std::cout << "\n";
+	std::cout << map1.get_depth(map1._root->left, 0) << std::endl;
 
 	//Suppression de tout les elements
-	map1.clear_nodes(map1._root);
+//	map1.clear_nodes(map1._root);
 
-	map1.display_tree(map1._root);
-
-//	std::cout << map1._root->value.first << std::endl;
-//	std::cout << map1._root->right->value.first << std::endl;
-//	std::cout << map1._root->left->value.first << std::endl;
-//	std::cout << map1._root->right->right->value.first << std::endl;
+//	map1.display_tree(map1._root);
 
 	return 0;
 }
