@@ -3,7 +3,7 @@
 #include <string>
 #include "../Utils/Pair.hpp"
 #
-#include "Node1.hpp"
+#include "Map.hpp"
 
 int main()
 {
@@ -19,7 +19,7 @@ int main()
 
 	//Declaration de ft::map
 	ft::map<int, std::string> map1;
-
+	//Insertion d'elements de la map
 	map1.insert_root_node(p8, NULL);
 	map1.insert_root_node(p6, NULL);
 	map1.insert_root_node(p1, NULL);
@@ -29,9 +29,10 @@ int main()
 	map1.insert_root_node(p7, NULL);
 	map1.insert_root_node(p3, NULL);
 
-
+	//Display
 	map1.display_tree(map1._root);
 
+	//Suppression de tout les elements
 	map1.clear_nodes(map1._root);
 
 	map1.display_tree(map1._root);
