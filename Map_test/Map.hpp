@@ -89,7 +89,7 @@ class map
 				current = new_node(val, parent);
 				current->parent = parent;
 			}
-			if (val.first < current->value.first)
+			if (_key_compare(val.first, current->value.first))
 				current->left = insert_node(val, current->left, current);
 			else if (val.first > current->value.first)
 				current->right = insert_node(val, current->right, current);
@@ -159,13 +159,13 @@ class map
 				return NULL;
 			//Initialisation de current = element a supprimer
 			current = find_key(key, current);
-			//Si l'element a supprimer est la racine--->Utile ? 
+////////////////////////Si l'element a supprimer est la racine
 			if (key == _root->value.first)
 			{
 				//Deleting _root
 				//return new_root
 			}
-			//Si l'element a supprimer est une feuille
+////////////////////////Si l'element a supprimer est une feuille
 			else if (!current->left && !current->right)
 			{
 				current->parent = NULL;
@@ -174,10 +174,10 @@ class map
 				current = NULL;
 				_size--;
 			}
-			//Si l'element a supprimer n'est ni la racine ni une feuille
+////////////////////////Si l'element a supprimer n'est ni la racine ni une feuille
 			else
 			{	
-				//Si l'element a supprimer a un seul enfant
+//..............................//Si l'element a supprimer a un seul enfant
 				if (!current->right || !current->left)
 				{
 					//Si l'enfant est a droite
@@ -203,13 +203,28 @@ class map
 					current = NULL;
 					_size--;
 				}
-				//Si l'element a supprimer a deux enfant
+//............................//Si l'element a supprimer a deux enfant
 				else if (current->right && current->left)
-				{
-					node_type* temp;
-					if (_key_compare(current->parent->value.first), key)
+				{	
+					//Si la profondeur est plus grande a droite
+					if (get_depth(current->right) > get_depth(current->left))
 					{
-
+						//Remplacer l'element a supprimer par son fils de droite
+						//Si le filsde droite n'a qu'un fils
+						//----->FINI
+						//Si le fils de droite a 2 fils
+						//---->Il garde le fils avec la plus grande profondeur
+						//---->On replace l'autre fils dans l'arbre
+					}
+					//Si la profondeur est plus grande a gauche
+					else if (get_depth(current->left) >= get_depth(current->right))
+					{
+						//Remplacer l'element a supprimer par son fils de gauche
+						//Si le fils de gauche n'a qu'un fils
+						//----->FINI
+						//Si le fils de gauche a 2 fils
+						//---->Il garde le fils avec la plus grande profondeur
+						//---->On replace l'autre fils dans l'arbre
 					}
 				}
 			}
