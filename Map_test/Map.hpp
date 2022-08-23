@@ -11,7 +11,6 @@ struct node
 	node *left;
 	node *right;
 	node *parent;
-//	bool last;
 	node(V v, node *l, node *r, node *p, bool e = false) : value(v), left(l), right(r), parent(p)/*, last(e)*/ {}
 	~node() {}
 };
@@ -160,13 +159,13 @@ class map
 			//Initialisation de current = element a supprimer
 			current = find_key(key, current);
 ////////////////////////Si l'element a supprimer est la racine
-			if (key == _root->value.first)
-			{
-				//Deleting _root
-				//return new_root
-			}
+//			if (key == _root->value.first)
+//			{
+//				//Deleting _root
+//				//return new_root
+//			}
 ////////////////////////Si l'element a supprimer est une feuille
-			else if (!current->left && !current->right)
+			/*else*/ if (!current->left && !current->right)
 			{
 				current->parent = NULL;
 				_alloc.destroy(current);
@@ -183,18 +182,18 @@ class map
 					//Si l'enfant est a droite
 					if (current->right)
 					{
-						if (_key_compare(current->parent->value.first), key)
+						if (!_key_compare(key, current->parent->value.first))
 							current->parent->right = current->right;
-						else if (key, _key_compare(current->parent->value.first))
+						else if (_key_compare(key, current->parent->value.first))
 							current->parent->left = current->right;
 						current->right->parent = current->parent;
 					}
 					//Si l'enfant est a gauche
 					else if (current->left)
 					{
-						if (_key_compare(current->parent->value.first), key)
+						if (!_key_compare(key, current->parent->value.first))
 							current->parent->right = current->left;
-						else if (key, _key_compare(current->parent->value.first))
+						else if (_key_compare(key, current->parent->value.first))
 							current->parent->right = current->left;
 						current->left->parent = current->parent;
 					}
@@ -205,33 +204,90 @@ class map
 				}
 //............................//Si l'element a supprimer a deux enfant
 				else if (current->right && current->left)
-				{	
+				{
+					std::cout << "LE FILS A 2 FILS\n";
 					//Si la profondeur est plus grande a droite
-					if (get_depth(current->right) > get_depth(current->left))
+					if (get_depth(current->right, 0) > get_depth(current->left, 0))
 					{
+						std::cout << "DEEPER RIGHT\n";
+						//On stock le fils de gauche du fils de droite (s'il existe)
+//						if (current->right->left)
+//						{
+//						std::cout << "oui" << std::endl;
+//						node_type* temp = current->right->left;
+//						}
 						//Remplacer l'element a supprimer par son fils de droite
+						current->left->parent = current->right;
+						current->right->parent = current->parent;
+						//Si l'element a supprimer est plus grand que son parent
+						if (_key_compare(key, current->parent->value.first))
+							current->parent->right = current->right;
+						//Si l'element a supprimer est plus petit que son parent
+						else if (!_key_compare(key, current->parent->value.first))
+							current->parent->left = current->right;
 						//Si le filsde droite n'a qu'un fils
 						//----->FINI
 						//Si le fils de droite a 2 fils
-						//---->Il garde le fils avec la plus grande profondeur
-						//---->On replace l'autre fils dans l'arbre
+			/*			if (current->right->right && current->right->left)
+						{
+							node_type* temp1;
+							//---->Il garde le fils de droite
+							//---->Il transmet son fils de gauche a son fils de droite
+							current->right->left = current->left;
+							//---->On replace l'autre fils dans l'arbre (en le duppliquant)
+							temp1 = insert_root_node(current->right->left->value, _root);
+							temp1->right = current->right->left->right;
+							temp1->left = current->right->left->left;
+							//On supprime l'ancien fils du fils
+							_alloc.destroy(current->right->left);
+							_alloc.deallocate(current->right->left, 1);
+							current->right->left = NULL;
+						}*/
 					}
-					//Si la profondeur est plus grande a gauche
-					else if (get_depth(current->left) >= get_depth(current->right))
+/*					//Si la profondeur est plus grande a gauche
+					else if (get_depth(current->left, 0) >= get_depth(current->right, 0))
 					{
+						std::cout << "DEEPER LEFT\n";
+						//On stock le fils de droite du fils de gauche (s'il existe)
+						if (current->left->right)
+							node_type* temp = current->left->right;
 						//Remplacer l'element a supprimer par son fils de gauche
+						current->right->parent = current->left;
+						current->left->parent = current->parent;
+						//Si l'element a supprimer est plus grand que son parent
+						if (_key_compare(key, current->parent->value.first))
+							current->parent->right = current->right;
+						//Si l'element a supprimer est plus petit que son parent
+						else if (!_key_compare(key, current->parent->value.first))
+							current->parent->left = current->right;
 						//Si le fils de gauche n'a qu'un fils
 						//----->FINI
 						//Si le fils de gauche a 2 fils
-						//---->Il garde le fils avec la plus grande profondeur
-						//---->On replace l'autre fils dans l'arbre
-					}
+						if (current->left->right && current->left->left)
+						{
+							node_type* temp1;
+							//---->Il garde le fils de gauche
+							//---->Il transmet son fils de droite a son fils de gauche
+							current->left->right = current->right;
+							//---->On replace l'autre fils dans l'arbre
+							temp1 = insert_root_node(temp->value, _root);
+							temp1->right = temp->right;
+							temp1->left = temp->left;
+							//On remplace l'encien fils du fils
+							_alloc.destroy(temp);
+							_alloc.deallocate(temp, 1);
+							temp = NULL;
+						}
+					}*/
+					_alloc.destroy(current);
+					_alloc.deallocate(current, 1);
+					current = NULL;
+					_size--;
 				}
+
 			}
 			return NULL;
 		}
-
-
 //................................TREE_DISPLAY................................//
 		void		display_tree(node_type* start)
 		{

@@ -15,12 +15,14 @@ int main()
 	const ft::pair<int, std::string> p6 = ft::make_pair(6, "six");
 	const ft::pair<int, std::string> p7 = ft::make_pair(7, "sept");
 	const ft::pair<int, std::string> p8 = ft::make_pair(8, "huit");
+	const ft::pair<int, std::string> p9 = ft::make_pair(9, "neuf");
 
 	//Declaration de ft::map
 	ft::map<int, std::string> map1;
 	//Insertion d'elements de la map
 	map1.insert_root_node(p2, NULL);
 	map1.insert_root_node(p6, NULL);
+	map1.insert_root_node(p9, NULL);
 	map1.insert_root_node(p1, NULL);
 	map1.insert_root_node(p4, NULL);
 	map1.insert_root_node(p8, NULL);
@@ -29,18 +31,15 @@ int main()
 	map1.insert_root_node(p3, NULL);
 
 	//Display
-//	map1.display_tree(map1._root);
+	map1.display_tree(map1._root);
 
-	std::cout << map1.get_depth(map1._root, 0) << std::endl;
+	map1.delete_node(6, map1._root);	
 	std::cout << "\n";
-	std::cout << map1.get_depth(map1._root->right, 0) << std::endl;
-	std::cout << "\n";
-	std::cout << map1.get_depth(map1._root->left, 0) << std::endl;
-
+//	std::cout << map1.find_key(2, map1._root)->value.first << std::endl;
 	//Suppression de tout les elements
 //	map1.clear_nodes(map1._root);
 
-//	map1.display_tree(map1._root);
+	map1.display_tree(map1._root);
 
 	return 0;
 }
