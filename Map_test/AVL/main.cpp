@@ -31,7 +31,10 @@ int main()
 
 	Map.display(Map._root);
 
-	Map.printTree(Map._root, "", true);
+	Map.deleteNode(Map._root, 6);
+
+	Map.display(Map._root);
+//	Map.printTree(Map._root, "", true);
 
 	return 0;
 }

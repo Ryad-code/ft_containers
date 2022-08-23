@@ -10,6 +10,15 @@ struct Node {
 	Node	*right;
 	int	height;
 	Node(V v, Node* l = NULL, Node* r = NULL, int h = 0): value(v), left(l), right(r), height(h) {}
+//	Node(Node* n): value(n->value), left(n->left), right(n->right), height(n->height) {}
+	Node&  operator=(Node& n)
+	{
+		value = n.value;
+		left = n.left;
+		right = n.right;
+		height = n.height;
+		return *this;
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////CLASS MAP
@@ -57,14 +66,12 @@ class map
 
 		node_type*	create_node(const value_type& val)
 		{
+			node_type* new_node;
 		       	new_node = _alloc.allocate(1);
 			_alloc.construct(new_node, node_type(val, NULL, NULL, 0));
-			new_node->value = val;
-			new_node->left = NULL;
 			_size++;
 			return new_node;
 		}
-
 		// Rotate right
 		node_type* rightRotate(node_type* y)
 		{
@@ -76,8 +83,7 @@ class map
 			x->height = max(height(x->left), height(x->right)) + 1;
 			return x;
 		}
-
-		// Rotate left
+//..............Rotate left
 		node_type* leftRotate(node_type* x)
 		{
 			node_type* y = x->right;
@@ -88,8 +94,7 @@ class map
 			y->height = max(height(y->left), height(y->right)) + 1;
 			return y;
 		}
-
-		// Get the balance factor of each node
+//..............Get the balance factor of each node
 		int getBalanceFactor(node_type* current)
 		{
 			if (current == NULL)
@@ -135,6 +140,79 @@ class map
 					return leftRotate(current);
 				}
 			}
+			return current;
+		}
+
+//..............Node with minimum value
+		node_type* nodeWithMimumValue(node_type* current)
+		{
+			node_type* temp = current;
+			while (temp->left)
+				temp = temp->left;
+			return temp;
+		}
+
+//..............Delete a node
+		node_type* deleteNode(node_type* current, const key_type& key)
+		{
+			// Find the node and delete it
+			if (current == NULL)
+				return current;
+			if (key < current->value.first)
+				current->left = deleteNode(current->left, key);
+			else if (key > current->value.first)
+				current->right = deleteNode(current->right, key);
+			else
+			{
+				if ((current->left == NULL) || (current->right == NULL))
+				{
+					node_type* temp = current->left ? current->left : current->right;
+					if (temp == NULL)
+					{
+						temp = current;
+						current = NULL;
+					}
+					else
+						*current = *temp;
+					free(temp);
+				}
+				else
+				{
+					//A MODFIFIER!!!!!!!!!!!!!!!!
+//					node_type* temp = nodeWithMimumValue(current->right);
+//					current->value.first = temp->value.first;
+//					current->right = deleteNode(current->right, temp->value.first);
+				}
+			}
+			if (current == NULL)
+				return current;
+			// Update the balance factor of each node and
+/*			// balance the tree
+			current->height = 1 + max(height(current->left), height(current->right));
+			int balanceFactor = getBalanceFactor(current);
+			if (balanceFactor > 1)
+			{
+				if (getBalanceFactor(root->left) >= 0) {
+					return rightRotate(root);
+				}
+				else
+				{
+					root->left = leftRotate(root->left);
+					return rightRotate(root);
+				}
+			}
+			if (balanceFactor < -1)
+			{
+				if (getBalanceFactor(root->right) <= 0)
+				{
+					return leftRotate(root);
+				}
+				else
+				{
+					root->right = rightRotate(root->right);
+					return leftRotate(root);
+				}
+			}*/
 			return current;
 		}
 //....................................................................DISPLAY TREE
