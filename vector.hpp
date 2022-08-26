@@ -82,7 +82,15 @@ namespace ft
 				_alloc.deallocate(_pointer, _capacity);
 			};
 //......................ASSIGN
-			void assign( size_type n, const T& u )
+			template <class InputIterator>
+			void assign( InputIterator first, InputIterator last,
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+			{
+				erase(begin(), end());
+				insert(begin(), first, last);
+			}
+
+			void assign(size_type n, const T& u)
 			{
 				erase(begin(), end());
 				insert(begin(), n, u);
@@ -107,6 +115,16 @@ namespace ft
 			{
 				return _alloc.max_size();
 			};
+
+			void	resize(size_type sz, T c = T())
+			{
+				if (sz > size())
+					insert(end(), sz - size(), c);
+				else if (sz < size())
+					erase(begin() + sz, end());
+				else
+					return;
+			}
 
 			size_t capacity(void) const		//Capacity of the current allocated storage (not necessarily equal to _size)
 			{
