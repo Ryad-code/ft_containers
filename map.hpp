@@ -7,6 +7,8 @@
 #include "Iterator.hpp"
 #include "Map_iterator.hpp"
 #include "Enable_if.hpp"
+#include "Is_integral.hpp"
+#include "Lexicographical_compare.hpp"
 
 namespace ft
 {
@@ -78,7 +80,7 @@ namespace ft
 				_root(NULL) {}
 			
 			template <class InputIterator>
-			map (typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()):
+			map (typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()):
 				_alloc(alloc),
 				_key_compare(comp),
 				_size(0),
@@ -375,7 +377,7 @@ namespace ft
 //......................MODIFIERS
 			pair<iterator, bool>	insert(const value_type& val)
 			{
-				size_t temp;
+				size_t temp = _size;
 				insert_node_root(val, _root);
 				return (pair<iterator,bool>(find_key(val.first, _root), temp != _size));
 			}
@@ -388,7 +390,7 @@ namespace ft
 			}
 
 			template <class InputIterator>
-			void 			insert (typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last)
+			void 			insert (typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last)
 			{
 				for (;first != last; first++)
 					insert(*first);
@@ -472,9 +474,9 @@ namespace ft
 			const_iterator		lower_bound(const key_type& key) const
 			{
 				const_iterator it1 = end();
-				for (iterator it2 = begin(); it2 != it1; it2++)
+				for (const_iterator it2 = begin(); it2 != it1; it2++)
 					if (!_key_compare(it2->first, key))
-						return cont_iterator(it2);
+						return const_iterator(it2);
 				return it1;
 			}
 
@@ -490,7 +492,7 @@ namespace ft
 			const_iterator		upper_bound(const key_type& key) const
 			{
 				const_iterator it1 = end();
-				for (iterator it2 = begin(); it2 != it1; it2++)
+				for (const_iterator it2 = begin(); it2 != it1; it2++)
 					if (_key_compare(key, it2->first))
 						return const_iterator(it2);
 				return it1;
@@ -511,13 +513,25 @@ namespace ft
 				return _alloc;
 			}
 	};
+//......................UTILS
+			template <class InputIterator1, class InputIterator2>
+			bool equal1(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
+			{
+				while (first1!=last1)
+				{
+					if (!(*first1 == *first2))
+						return false;
+					++first1; ++first2;
+				}
+				return true;
+			}
 ////////////////////////NON-MEMBER FUNCTIONS (overload)
 			template <class Key, class T, class Compare, class Alloc>
 			bool operator== (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
 			{
 				if (lhs.size() != rhs.size())
 					return false;
-				return equal(lhs.begin(), lhs.end(), rhs.begin());
+				return equal1(lhs.begin(), lhs.end(), rhs.begin());
 			}
 
 			template <class Key, class T, class Compare, class Alloc>
