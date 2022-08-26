@@ -1,16 +1,16 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <vector>
-#include <map>
-#include <iterator>
 #include "Map.hpp"
+#include "Vector.hpp"
+#include "Stack.hpp"
 
 int main()
 {
-	ft::map<std::string, int> m;
+	ft::map<int, std::string>	Map;
+	ft::vector<int>			Vector;
+	ft::stack<int>			Stack;
+	
 
 	return 0;
 }
-
-

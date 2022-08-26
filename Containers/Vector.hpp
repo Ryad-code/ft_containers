@@ -6,7 +6,8 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
-#include "../Iterator/Iterator.hpp"
+#include "../Utils/Iterator.hpp"
+#include "../Utils/Enable_if.hpp"
 
 namespace ft
 {
@@ -47,12 +48,48 @@ namespace ft
 					_alloc.construct(_pointer + i, value);
 				}
 			};
+
+			template <class InputIterator>
+			vector( InputIterator first, InputIterator last, const Allocator& alloc = Allocator(),
+			typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL) : _pointer(NULL), _alloc(alloc), _capacity(0), _size(0)
+			{
+				assign(first, last);
+			}
+
+			vector(const vector<T,Allocator>& x) : _alloc(x._alloc)
+			{
+				_pointer = _alloc.allocate(x._capacity);
+				for (size_type i(0); i < x._size; i++)
+				{
+					_alloc.construct(_pointer + i, *(x._pointer + i));
+				}
+				_size = x._size;
+				_capacity = x._size;
+			}
+
+			vector<T, Allocator>& operator=(const vector< T, Allocator >& x)
+			{
+				if (this != &x)
+					assign(x.begin(), x.end());
+				return *this;
+			}
 //....................................................................................//DESTRUCTOR
 			~vector(void)
 			{
 				clear();
 				_alloc.deallocate(_pointer, _capacity);
 			};
+//......................ASSIGN
+			void assign( size_type n, const T& u )
+			{
+				erase(begin(), end());
+				insert(begin(), n, u);
+			}
+//......................ALLOCATOR
+			allocator_type get_allocator() const
+			{
+				return _alloc;
+			}
 //....................................................................................//CAPACITY
 			bool empty(void) const			//Checks if vector is empty
 			{
@@ -94,11 +131,6 @@ namespace ft
 					_capacity = new_capacity;
 					_pointer = tmp;
 				}
-			};
-//................................................................................//TEST
-			pointer get_pointer(void)
-			{
-				return _pointer;
 			};
 //................................................................................//ELEMENTS ACCESS
 			reference	operator[](size_type index)
@@ -244,9 +276,9 @@ namespace ft
 				}
 			};
 //...............................ENABLE_IF NEEDED---->
-/*			template <class InputIterator>
+			template <class InputIterator>
 			void insert( iterator position, InputIterator first, InputIterator last,
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL )
+			typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL )
 			{
 				difference_type distance = 0;
 				size_type it_dist = 0;
@@ -278,7 +310,7 @@ namespace ft
 					_size++;
 				}
 			};
-*/
+
 			iterator erase( iterator position )
 			{
 				size_type	distance;

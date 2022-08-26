@@ -76,8 +76,17 @@ namespace ft
 				_key_compare(comp),
 				_size(0),
 				_root(NULL) {}
+			
+			template <class InputIterator>
+			map (typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()):
+				_alloc(alloc),
+				_key_compare(comp),
+				_size(0),
+				_root(NULL)
+			{
+				insert(first, last);
+			}
 
-			//--->Range constructor to do
 			map(const map& obj):
 				_alloc(obj._alloc),
 				_key_compare(obj._key_compare),
@@ -87,9 +96,17 @@ namespace ft
 				*this = obj;
 			}
 
-			~map() {}				//--->Destrcutor to do
+			~map()
+			{
+				clear_node(_root);
+			}
 
-			map& operator=(const map& obj) {}	//--->Operator =  to do
+			map& operator=(const map& obj)
+			{
+				clear_node(_root);
+				insert(obj.begin(), obj.end());
+				return *this;
+			}
 
 ////////////////////////PRIVATE TREE FUNCTIONS
 		private:
@@ -419,7 +436,126 @@ namespace ft
 				clear_from_node(_root);
 			}
 //......................OPERATIONS
+			iterator		find(const key_type& key)
+			{
+				node_type* temp = find_key(key, _root);
+				if (temp)
+					return iterator(temp);
+				return end();
+			}
+
+			const_iterator		find(const key_type& key) const
+			{
+				node_type* temp = const_find_key(key, _root);
+				if (temp)
+					return const_iterator(temp);
+				return end();
+			}
+
+			size_type		count(const key_type& key) const
+			{
+				node_type* temp = const_find_key(key, _root);
+				if (temp)
+					return 1;
+				return 0;
+			}
+
+			iterator		lower_bound(const key_type& key)
+			{
+				iterator it1 = end();
+				for (iterator it2 = begin(); it2 != it1; it2++)
+					if (!_key_compare(it2->first, key))
+						return it2;
+				return it1;
+			}
+
+			const_iterator		lower_bound(const key_type& key) const
+			{
+				const_iterator it1 = end();
+				for (iterator it2 = begin(); it2 != it1; it2++)
+					if (!_key_compare(it2->first, key))
+						return cont_iterator(it2);
+				return it1;
+			}
+
+			iterator		upper_bound(const key_type& key)
+			{
+				iterator it1 = end();
+				for (iterator it2 = begin(); it2 != it1; it2++)
+					 if (_key_compare(key, it2->first, key))
+						 return it2;
+				return it1;
+			}
+
+			const_iterator		upper_bound(const key_type& key) const
+			{
+				const_iterator it1 = end();
+				for (iterator it2 = begin(); it2 != it1; it2++)
+					if (_key_compare(key, it2->first))
+						return const_iterator(it2);
+				return it1;
+			}
+
+			pair<iterator,iterator> equal_range (const key_type& key)
+			{
+				return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+			}
+
+			pair<const_iterator,const_iterator> equal_range (const key_type& key) const
+			{
+				return pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
+			}
+//......................ALLOCATOR
+			allocator_type get_allocator() const
+			{
+				return _alloc;
+			}
 	};
+////////////////////////NON-MEMBER FUNCTIONS (overload)
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator== (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+			{
+				if (lhs.size() != rhs.size())
+					return false;
+				return equal(lhs.begin(), lhs.end(), rhs.begin());
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator!= (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+			{
+				return !(lhs == rhs);
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator< (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+			{
+				return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator<= (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+			{
+				return (lhs < rhs || lhs == rhs);
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator> (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+			{
+				return rhs < lhs;
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator>= (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+			{
+				return (lhs > rhs || lhs == rhs);
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
+			{
+				x.swap(y);
+			}
+			
 }
 
 #endif
