@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include "Pair.hpp"
-#include "Iterator.hpp"
+#include "Reverse_iterator.hpp"
 #include "Map_iterator.hpp"
 #include "Enable_if.hpp"
 #include "Is_integral.hpp"
@@ -358,7 +358,7 @@ namespace ft
 
 			reverse_iterator	rend(void)
 			{
-				return everse_iterator(begin());
+				return reverse_iterator(begin());
 			}
 
 			const_reverse_iterator	rend(void) const

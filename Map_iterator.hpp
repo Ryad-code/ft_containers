@@ -2,6 +2,7 @@
 #define MAP_ITERATOR_HPP
 
 #include "map.hpp"
+#include "Iterator.hpp"
 
 namespace ft {
 

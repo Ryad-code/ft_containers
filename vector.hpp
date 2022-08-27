@@ -6,7 +6,7 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
-#include "Iterator.hpp"
+#include "Vector_iterator.hpp"
 #include "Enable_if.hpp"
 #include "Lexicographical_compare.hpp"
 #include "Is_integral.hpp"
@@ -238,51 +238,58 @@ namespace ft
 			{
 				return const_reverse_iterator(begin());
 			};
-//....................................................................................//MODIFIERS
-			void		push_back(const T& value)
+//....................................................................................//MODIFIERS		
+			void push_back( const T& x )
 			{
-				if (_capacity == 0)
+				if (_capacity == 0) {
 					reserve(1);
-				else if (_size == _capacity && _capacity != 0)
-					reserve(_capacity + 1);
-				_alloc.construct(_pointer + _size, value);
+				}
+				else if (_size == _capacity && _capacity != 0) {
+					reserve(2 * _capacity);
+				}
+				_alloc.construct(_pointer + _size, x);
 				_size++;
 			};
 
-			void		pop_back(void)
+			void pop_back()
 			{
-				_alloc.destroy(_pointer + (_size - 1));
+				_alloc.destroy(&this->back());
 				_size--;
 			};
 
-			iterator	insert(iterator pos, const T& value)
+			iterator insert( iterator position, const T& x )
 			{
 				size_type distance;
-				distance = pos - begin();
+				distance = position - this->begin();
 				if (_capacity == 0)
+				{
 					reserve(1);
-				else if (_capacity == _size && _capacity != 0)
-					reserve(1 + _capacity);
+				}
+				else if (_capacity == _size && _capacity!= 0)
+				{
+					reserve(2 * _capacity);
+				}
 				for (size_type j(_size); j > distance; j--)
+				{
 					_alloc.construct(_pointer + j, _pointer[j - 1]);
-				_alloc.construct(_pointer + distance, value);
-				_size--;
+				}
+				_alloc.construct(_pointer + distance, x);
+				_size++;
 				return this->begin() + distance;
 			};
 
-			void insert( iterator position, size_type n, const T& x )
-			{
+			void insert( iterator position, size_type n, const T& x ) {
 				if (n == 0)
 					return ;
 				difference_type distance;
 				distance = position - this->begin();
 				if (_capacity < _size + n && _size * 2 >= _size + n)
 				{
-						reserve(2 * _size);
+					reserve(2 * _size);
 				}
 				else
 				{
-					 reserve(_size + n);
+					reserve(_size + n);
 				}
 				for (difference_type i(_size - 1); i >= distance; i--)
 				{
@@ -295,7 +302,7 @@ namespace ft
 					_alloc.construct(_pointer + j + distance, x);
 				}
 			};
-//...............................ENABLE_IF NEEDED---->
+
 			template <class InputIterator>
 			void insert( iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL )
@@ -305,7 +312,8 @@ namespace ft
 				size_type prev_size = _size;
 				size_type j = 0;
 				InputIterator it = first;
-				while (it != last) {
+				while (it != last)
+				{
 					it_dist++;
 					it++;
 				}
@@ -340,26 +348,29 @@ namespace ft
 				it = this->begin();
 				distance = position - it;
 				i = distance;
-				while (it + distance != this->end() - 1) {
+				while (it + distance != this->end() - 1)
+				{
 					i++;
 					_pointer[i - 1] = _pointer[i];
-					it++;
+					it++;	
 				}
 				this->pop_back();
 				return this->begin() + distance;
 			};
 
-			iterator erase( iterator first, iterator last )
+			iterator erase( iterator first, iterator last)
 			{
 				size_type	i;
 				iterator	it;
 				i = 0;
 				it = this->begin();
-				while (it != first) {
+				while (it != first)
+				{
 					i++;
 					it++;
 				}
-				while (first != last) {
+				while (first != last)
+				{
 					erase(it);
 					++first;
 				}
@@ -381,7 +392,7 @@ namespace ft
 				}
 				_size = 0;
 			};
-		};
+	};
 //...................................................................................OPERATORS
 		template <class T, class Alloc>
 		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
